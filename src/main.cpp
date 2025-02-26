@@ -1,8 +1,10 @@
 #include <iostream>
 
-int main() {
+#include "input.hpp"
 
-  // This statement prints "Hello World"
-  std::cout << "Hello World";
-  return 0;
+int main()
+{
+    // This statement prints "Hello World"
+    std::cout << "Hello World";
+    return 0;
 }
