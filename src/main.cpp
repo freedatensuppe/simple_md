@@ -1,10 +1,13 @@
-#include <iostream>
+#include <string>
 
 #include "input.hpp"
 
-int main()
+int main(int argc, char* argv[])
 {
-    // This statement prints "Hello World"
-    std::cout << "Hello World";
+    const std::string configfile = argv[1];
+    InputReader       inputreader;
+    inputreader.readConfigToml(configfile);
+    inputreader.printConfigToml();
+    inputreader.readRestartFile();
     return 0;
 }
