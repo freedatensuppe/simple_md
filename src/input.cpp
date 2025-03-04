@@ -5,6 +5,7 @@
 #include <string>
 
 #include "atom.hpp"
+#include "box.hpp"
 #include "toml.hpp"
 
 void InputReader::readConfigToml(const std::string _configfile)
@@ -37,6 +38,8 @@ void InputReader::readRestartFile()
 
     rstfile >> atomName >> box_x >> box_y >> box_z;
 
+    Box box({box_x, box_y, box_z});
+
     while (rstfile >> atomName >> index >> atomType >> x >> y >> z >> vx >>
            vy >> vz >> Fx >> Fy >> Fz)
 
@@ -47,6 +50,7 @@ void InputReader::readRestartFile()
         atom.set_position(x, y, z);
         atom.set_velocity(vx, vy, vz);
         atom.set_force(Fx, Fy, Fz);
+        // box.addAtom();
         atoms.push_back(atom);
     }
 
