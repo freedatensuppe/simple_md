@@ -1,6 +1,4 @@
-#include <fstream>
-#include <iostream>
-
+#include "box.hpp"
 #include "toml.hpp"
 
 #ifndef INPUT_HPP
@@ -15,7 +13,7 @@ class InputReader
    public:
     void readConfigToml(const std::string _configfile);
     void printConfigToml();
-    void readRestartFile();
+    void readRestartFile(Box &box);
 };
 
 #endif

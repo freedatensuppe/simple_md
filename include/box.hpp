@@ -9,13 +9,18 @@ class Box
    private:
     std::vector<double> _dimensions;
     std::vector<Atom>   _atoms;
+    double              _energy;
 
    public:
-    Box(std::vector<double> dimensions) : _dimensions(dimensions) {}
-    void   addAtom(Atom &);
+    void              set_dimensions(std::vector<double> dimensions);
+    void              addAtom(Atom &);
+    std::vector<Atom> get_atoms();
+
     double x() { return _dimensions[0]; }
     double y() { return _dimensions[1]; }
     double z() { return _dimensions[2]; }
+
+    double calculate_energy(Box &box, std::vector<Atom> atoms);
 };
 
 #endif
