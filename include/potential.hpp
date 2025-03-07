@@ -6,11 +6,21 @@
 class Potential
 {
    private:
-    double _energy;
+    double _totalEnergy;
+    double _c6;
+    double _c12;
+
+    double _LJCutoff;
+    double _LJEnergyCutoff;
+    double _LJForceCutoff;
 
    public:
-    void calculate_energy_LJ(Box &box);
-    void calculate_forces_LJ(Box &box);
+    void calculateEnergyLJ(Box &box, double ljEnergyCutoff);
+    void calculateForcesLJ(Box &box, double ljForceCutoff);
+
+    void setLJCutoff(std::vector<double> dimensions);
+    void setljEnergyCutoff(std::vector<double> dimensions);
+    void setljForceCutoff(double ljForceCutoff);
 };
 
 #endif

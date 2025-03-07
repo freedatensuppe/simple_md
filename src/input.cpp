@@ -38,7 +38,7 @@ void InputReader::readRestartFile(Box& box)
 
     rstfile >> atomName >> box_x >> box_y >> box_z;
 
-    box.set_dimensions({box_x, box_y, box_z});
+    box.setDimensions({box_x, box_y, box_z});
 
     while (rstfile >> atomName >> index >> atomType >> x >> y >> z >> vx >>
            vy >> vz >> Fx >> Fy >> Fz)
