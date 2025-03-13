@@ -13,24 +13,30 @@ void Potential::setLJCutoff(std::vector<double> dimensions)
     _LJCutoff = *std::min_element(dimensions.begin(), dimensions.end()) / 2;
 }
 
-void Potential::calculateEnergyLJ(Box &box, double ljEnergyCutoff)
+void Potential::calculateEnergyLJ(Box &box)
 {
-    double r_cut        = ljEnergyCutoff;
-    double total_energy = 0;
-    double distance     = 0;
+    double total_energy = 0.00;
+    double distance     = 0.00;
 
     double epsilon = 0.23806458033;   // kJ / mol
     double sigma   = 3.4;             // 3.4 angs
 
-    for (size_t i = 0; i < box.getAtoms().size(); ++i)
+    std::vector<Atom>   atoms      = box.getAtoms();
+    std::vector<double> dimensions = box.getDimensions();
+    double              LJCutoff   = getLJCutoff();
+
+    for (size_t i = 0; i <= atoms.size(); ++i)
     {
-        for (size_t j = i + 1; i < box.getAtoms().size() - 1; ++j)
+        for (size_t j = i + 1; j <= atoms.size() - 1; ++j)
         {
             double distance = calculateDistance(
-                box.getAtoms()[i].get_position(),
-                box.getAtoms()[j].get_position()
+                atoms[i].get_position(),
+                atoms[j].get_position(),
+                dimensions
             );
-            if (distance < ljEnergyCutoff)
+
+            std::cout << i << " " << j << " " << distance << std::endl;
+            if (distance < LJCutoff)
             {
                 total_energy +=
                     4 * epsilon *
@@ -38,7 +44,8 @@ void Potential::calculateEnergyLJ(Box &box, double ljEnergyCutoff)
             }
         }
     }
-    std::print(total_energy);
+
+    std::cout << "Total LJ Energy:" << total_energy << "kJ/mol" << std::endl;
 }
 
-void Potential::calculateForcesLJ(Box &box, double ljEnergyCutoff) {}
+// void Potential::calculateForcesLJ(Box &box, double ljEnergyCutoff) {}

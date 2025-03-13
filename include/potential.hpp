@@ -1,5 +1,5 @@
-#ifndef INPUT_HPP
-#define INPUT_HPP
+#ifndef POTENTIAL_HPP
+#define POTENTIAL_HPP
 
 #include "box.hpp"
 
@@ -15,12 +15,14 @@ class Potential
     double _LJForceCutoff;
 
    public:
-    void calculateEnergyLJ(Box &box, double ljEnergyCutoff);
-    void calculateForcesLJ(Box &box, double ljForceCutoff);
+    void calculateEnergyLJ(Box &box);
+    void calculateForcesLJ(Box &box);
 
     void setLJCutoff(std::vector<double> dimensions);
     void setljEnergyCutoff(std::vector<double> dimensions);
     void setljForceCutoff(double ljForceCutoff);
+
+    double getLJCutoff() { return _LJCutoff; }
 };
 
 #endif

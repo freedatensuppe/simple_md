@@ -3,6 +3,7 @@
 
 #include "box.hpp"
 #include "input.hpp"
+#include "potential.hpp"
 
 int main(int argc, char* argv[])
 {
@@ -12,11 +13,14 @@ int main(int argc, char* argv[])
     inputreader.readConfigToml(configfile);
     inputreader.printConfigToml();
 
-    Box box;
+    Box       box;
+    Potential potential;
 
     inputreader.readRestartFile(box);
+    potential.setLJCutoff(box.getDimensions());
+    std::cout << potential.getLJCutoff() << std::endl;
 
-    std::cout << box.x();
+    potential.calculateEnergyLJ(box);
 
     return 0;
 }
