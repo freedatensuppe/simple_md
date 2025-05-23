@@ -15,8 +15,8 @@ class Potential
     double _LJForceCutoff;
 
    public:
-    void calculateEnergyLJ(Box &box);
-    void calculateForcesLJ(Box &box);
+    void calculateEnergyForcesLJ(Box &box);
+    //    void calculateForcesLJ(Box &box);
 
     void setLJCutoff(std::vector<double> dimensions);
     void setljEnergyCutoff(std::vector<double> dimensions);

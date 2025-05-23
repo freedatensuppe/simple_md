@@ -2,7 +2,7 @@
 
 #include <vector>
 
-void Atom::set_name(std::string atomName) { _atomName = atomName; }
+void Atom::set_name(const std::string& atomName) { _atomName = atomName; }
 
 void Atom::set_atomType(double atomType) { _atomType = atomType; }
 void Atom::set_position(double x, double y, double z) { _position = {x, y, z}; }

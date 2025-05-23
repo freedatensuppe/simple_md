@@ -2,19 +2,21 @@
 #define BOX_HPP
 
 #include <atom.hpp>
+#include <memory>
 #include <vector>
 
 class Box
 {
    private:
-    std::vector<double> _dimensions;
-    std::vector<Atom>   _atoms;
-    double              _energy;
+    std::vector<double>                _dimensions;
+    std::vector<std::shared_ptr<Atom>> _atoms;
+    double                             _energy;
 
    public:
-    void              setDimensions(std::vector<double> dimensions);
-    void              addAtom(Atom &);
-    std::vector<Atom> getAtoms();
+    void  setDimensions(std::vector<double> dimensions);
+    void  addAtom(const std::shared_ptr<Atom> atom);
+    Atom& getAtom(const size_t index);
+    std::vector<std::shared_ptr<Atom>> getAtoms();
 
     double              x() { return _dimensions[0]; }
     double              y() { return _dimensions[1]; }

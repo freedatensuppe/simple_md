@@ -15,7 +15,7 @@ class Atom
     std::vector<double> _force;
 
    public:
-    void set_name(std::string atomName);
+    void set_name(const std::string &atomName);
     void set_atomType(double atomType);
     void set_position(double x, double y, double z);
     void set_velocity(double vx, double vy, double vz);
