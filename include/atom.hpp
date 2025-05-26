@@ -15,16 +15,19 @@ class Atom
     std::vector<double> _force;
 
    public:
-    void set_name(const std::string &atomName);
-    void set_atomType(double atomType);
-    void set_position(double x, double y, double z);
-    void set_velocity(double vx, double vy, double vz);
-    void set_force(double Fx, double Fy, double Fz);
+    void setName(const std::string& atomName);
+    void setAtomType(double atomType);
+    void setPosition(double x, double y, double z);
+    void setVelocity(std::vector<double>& velocity);
+    void setForce(double Fx, double Fy, double Fz);
 
-    std::string         get_name() { return _atomName; }
-    std::vector<double> get_position() { return _position; }
-    std::vector<double> get_velocity() { return _velocity; }
-    std::vector<double> get_force() { return _force; }
+    void addForce(std::vector<double>& force);
+    void updatePosition(std::vector<double>& shift);
+
+    std::string         getName();
+    std::vector<double> getPosition();
+    std::vector<double> getVelocity();
+    std::vector<double> getForce();
 };
 
 #endif

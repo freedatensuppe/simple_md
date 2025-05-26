@@ -26,6 +26,7 @@ void InputReader::readRestartFile(Box& box)
     int                                index;
     double                             atomType;
     double                             x, y, z;
+    std::vector<double>                velocity(3);
     double                             vx, vy, vz;
     double                             Fx, Fy, Fz;
     std::vector<std::shared_ptr<Atom>> atoms;
@@ -47,11 +48,12 @@ void InputReader::readRestartFile(Box& box)
 
     {
         auto atom = std::make_shared<Atom>();
-        atom->set_name(atomName);
-        atom->set_atomType(atomType);
-        atom->set_position(x, y, z);
-        atom->set_velocity(vx, vy, vz);
-        atom->set_force(Fx, Fy, Fz);
+        velocity  = {vx, vy, vz};
+        atom->setName(atomName);
+        atom->setAtomType(atomType);
+        atom->setPosition(x, y, z);
+        atom->setVelocity(velocity);
+        atom->setForce(Fx, Fy, Fz);
         box.addAtom(atom);
     }
 

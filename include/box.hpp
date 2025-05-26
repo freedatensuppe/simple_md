@@ -14,6 +14,7 @@ class Box
 
    public:
     void  setDimensions(std::vector<double> dimensions);
+    void  setEnergy(double energy);
     void  addAtom(const std::shared_ptr<Atom> atom);
     Atom& getAtom(const size_t index);
     std::vector<std::shared_ptr<Atom>> getAtoms();
@@ -22,6 +23,9 @@ class Box
     double              y() { return _dimensions[1]; }
     double              z() { return _dimensions[2]; }
     std::vector<double> getDimensions() { return _dimensions; }
+    double              getEnergy();
+
+    void applyPBC(std::vector<double>& position);
 };
 
 #endif

@@ -1,13 +1,29 @@
 #include "atom.hpp"
 
-#include <vector>
+void Atom::setName(const std::string& atomName) { _atomName = atomName; }
 
-void Atom::set_name(const std::string& atomName) { _atomName = atomName; }
+void Atom::setAtomType(double atomType) { _atomType = atomType; }
+void Atom::setPosition(double x, double y, double z) { _position = {x, y, z}; }
+void Atom::setVelocity(std::vector<double>& velocity) { _velocity = velocity; }
+void Atom::setForce(double Fx, double Fy, double Fz) { _force = {Fx, Fy, Fz}; }
 
-void Atom::set_atomType(double atomType) { _atomType = atomType; }
-void Atom::set_position(double x, double y, double z) { _position = {x, y, z}; }
-void Atom::set_velocity(double vx, double vy, double vz)
+void Atom::addForce(std::vector<double>& force)
 {
-    _velocity = {vx, vy, vz};
+    for (auto i = 0; i < _force.size(); ++i)
+    {
+        _force[i] += force[i];
+    }
 }
-void Atom::set_force(double Fx, double Fy, double Fz) { _force = {Fx, Fy, Fz}; }
+
+void Atom::updatePosition(std::vector<double>& shift)
+{
+    for (auto i = 0; i < _force.size(); ++i)
+    {
+        _position[i] += shift[i];
+    }
+}
+
+std::string         Atom::getName() { return _atomName; }
+std::vector<double> Atom::getPosition() { return _position; }
+std::vector<double> Atom::getVelocity() { return _velocity; }
+std::vector<double> Atom::getForce() { return _force; }

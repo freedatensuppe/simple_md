@@ -16,11 +16,9 @@ int main(int argc, char* argv[])
     Box       box;
     Potential potential;
 
-    std::cout << "here";
-
     inputreader.readRestartFile(box);
     potential.setLJCutoff(box.getDimensions());
-    std::cout << potential.getLJCutoff() << std::endl;
+    std::cout << "LJ Cutoff:" << potential.getLJCutoff() << std::endl;
     potential.calculateEnergyForcesLJ(box);
 
     return 0;
