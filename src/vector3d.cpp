@@ -115,3 +115,8 @@ double magnitude(const Vector3D& v)
 {
     return std::sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
 }
+
+double magnitude_squared(const Vector3D& v)
+{
+    return v.x * v.x + v.y * v.y + v.z * v.z;
+}

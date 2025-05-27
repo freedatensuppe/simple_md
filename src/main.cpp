@@ -4,8 +4,8 @@
 #include "box.hpp"
 #include "input.hpp"
 #include "integrator.hpp"
+#include "output.hpp"
 #include "potential.hpp"
-#include "vector3d.hpp"
 
 int main(int argc, char* argv[])
 {
@@ -21,6 +21,8 @@ int main(int argc, char* argv[])
     Integrator integrator;
 
     inputreader.readRestartFile(box);
+    Output output;
+
     potential.setLJCutoff(box.getDimensions());
     std::cout << "LJ Cutoff:" << potential.getLJCutoff() << std::endl;
 
@@ -38,9 +40,13 @@ int main(int argc, char* argv[])
     //    pos0.print();
     //    pos1.print();
 
-    for (int i = 0; i < 3; ++nsteps)
+    for (int i = 0; i < 100; ++i)
     {
         potential.calculateEnergyForcesLJ(box);
+
+        std::cout << "Step:" << i << "Total LJ Energy:" << box.getEnergy()
+                  << "kcal/mol" << std::endl;
+        output.writeAllOutput(box);
         integrator.firstStep(box);
         integrator.secondStep(box);
     }

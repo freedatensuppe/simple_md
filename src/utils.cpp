@@ -10,6 +10,12 @@ double calculateDistance(Vector3D a, Vector3D b, Vector3D dimensions)
     return distance;
 }
 
+double calculateDistanceSquared(Vector3D a, Vector3D b, Vector3D dimensions)
+{
+    double distance = magnitude_squared(b - a);
+    return distance;
+}
+
 Vector3D calculateDistanceVector(Vector3D a, Vector3D b, Vector3D dimensions)
 {
     Vector3D distanceVector;
