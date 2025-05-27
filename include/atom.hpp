@@ -11,6 +11,7 @@ class Atom
    private:
     std::string _atomName;
     double      _atomType;
+    double      _mass = 39.948;   // u
     Vector3D    _position;
     Vector3D    _positionPrev;
     Vector3D    _velocity;
@@ -25,8 +26,10 @@ class Atom
 
     void addForce(Vector3D& force);
     void updatePosition(Vector3D& shift);
+    void scaleVelocity(double& tFactor);
 
     std::string getName();
+    double      getMass();
     Vector3D    getPosition();
     Vector3D    getVelocity();
     Vector3D    getForce();

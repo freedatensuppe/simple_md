@@ -38,11 +38,11 @@ Vector3D Vector3D::operator*(const double& scalar)
     return Vector3D(x * scalar, y * scalar, z * scalar);
 }
 
-Vector3D Vector3D::operator*(const Vector3D& other)
+Vector3D Vector3D::operator*=(const double& scalar)
 {
-    x *= other.x;
-    y *= other.y;
-    y *= other.y;
+    x *= scalar;
+    y *= scalar;
+    z *= scalar;
     return *this;
 }
 
@@ -111,12 +111,9 @@ Vector3D round(const Vector3D& v)
     return Vector3D(std::round(v.x), std::round(v.y), std::round(v.z));
 }
 
-double magnitude(const Vector3D& v)
-{
-    return std::sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
-}
+double magnitude(const Vector3D& v) { return std::sqrt(magnitudeSquared(v)); }
 
-double magnitude_squared(const Vector3D& v)
+double magnitudeSquared(const Vector3D& v)
 {
     return v.x * v.x + v.y * v.y + v.z * v.z;
 }

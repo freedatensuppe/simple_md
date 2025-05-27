@@ -6,6 +6,7 @@
 #include "integrator.hpp"
 #include "output.hpp"
 #include "potential.hpp"
+#include "thermostat.hpp"
 
 int main(int argc, char* argv[])
 {
@@ -19,12 +20,14 @@ int main(int argc, char* argv[])
     Box        box;
     Potential  potential;
     Integrator integrator;
+    Thermostat thermostat;
 
     inputreader.readRestartFile(box);
     Output output;
 
     potential.setLJCutoff(box.getDimensions());
-    std::cout << "LJ Cutoff:" << potential.getLJCutoff() << std::endl;
+    std::cout << "\nLJ Cutoff:" << potential.getLJCutoff() << std::endl;
+    std::cout << "Natoms:" << box.getAtoms().size() << std::endl;
 
     toml::table config      = inputreader.get_config();
     int         nsteps      = config["MDSettings"]["nsteps"].value_or(0);
@@ -39,16 +42,19 @@ int main(int argc, char* argv[])
     //
     //    pos0.print();
     //    pos1.print();
+    thermostat.calculateTemperature(box);
 
     for (int i = 0; i < 100; ++i)
     {
         potential.calculateEnergyForcesLJ(box);
 
-        std::cout << "Step:" << i << "Total LJ Energy:" << box.getEnergy()
-                  << "kcal/mol" << std::endl;
+        std::cout << "Step: " << i << " T: " << thermostat.getTemperature()
+                  << " E: " << box.getEnergy() << " kcal/mol" << std::endl;
         output.writeAllOutput(box);
         integrator.firstStep(box);
         integrator.secondStep(box);
+        thermostat.calculateTemperature(box);
+        thermostat.applyThermostat(box);
     }
     //    Vector3D v1 = {0.0, 0.0, 0.0};
     //    Vector3D v2 = {13.478100, -17.733801, -10.077600};

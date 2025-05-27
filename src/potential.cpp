@@ -75,12 +75,9 @@ void Potential::calculateEnergyForcesLJ(Box& box)
                 );
 
                 total_energy += 4 * epsilon * sigma_12 / r_12 - sigma_6 / r_6;
-                // double sr6    = pow(sigma / distance, 6);
-                // total_energy += 4.0 * epsilon * (sr6 * sr6 - sr6);
 
                 F = 4 * epsilon *
                     (12 * sigma_12 / (r_12 * r) - 6 * sigma_6 / (r_6 * r));
-                // F = 24.0 * epsilon * (2 * sr6 * sr6 - sr6) / distance;
 
                 F_vector = F * rVector / r;
 

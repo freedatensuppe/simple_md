@@ -12,7 +12,7 @@ double calculateDistance(Vector3D a, Vector3D b, Vector3D dimensions)
 
 double calculateDistanceSquared(Vector3D a, Vector3D b, Vector3D dimensions)
 {
-    double distance = magnitude_squared(b - a);
+    double distance = magnitudeSquared(b - a);
     return distance;
 }
 

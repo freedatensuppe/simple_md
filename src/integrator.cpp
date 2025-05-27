@@ -6,7 +6,7 @@ void Integrator::integrateVelocities(Atom *atom)
 {
     Vector3D velocity = atom->getVelocity();
     auto     force    = atom->getForce();
-    auto     mass     = 39.948;
+    auto     mass     = atom->getMass();
     auto     dt       = 2.0E-15;
 
     velocity += dt * force / mass;

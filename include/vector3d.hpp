@@ -15,6 +15,7 @@ class Vector3D
     Vector3D& operator-=(const Vector3D& other);
     Vector3D  operator*(const Vector3D& other);
     Vector3D  operator*(const double& scalar);
+    Vector3D  operator*=(const double& scalar);
     Vector3D  operator/(const double& scalar);
     Vector3D  operator/(const Vector3D& other);
 
@@ -36,6 +37,6 @@ Vector3D operator*(const double& scalar, const Vector3D& v);
 Vector3D round(const Vector3D& v);
 
 double magnitude(const Vector3D& v);
-double magnitude_squared(const Vector3D& v);
+double magnitudeSquared(const Vector3D& v);
 
 #endif   // VECTOR3D_HPP
