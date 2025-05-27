@@ -8,6 +8,9 @@
 #include "atom.hpp"
 #include "box.hpp"
 #include "toml.hpp"
+#include "vector3d.hpp"
+
+toml::table InputReader::get_config() { return _config; }
 
 void InputReader::readConfigToml(const std::string _configfile)
 {
@@ -21,15 +24,17 @@ void InputReader::readRestartFile(Box& box)
     std::string restartfile =
         _config["MDSettings"]["restart_file"].value_or("");
 
-    double                             box_x, box_y, box_z;
     std::string                        atomName;
+    std::vector<std::shared_ptr<Atom>> atoms;
     int                                index;
+    double                             box_x, box_y, box_z;
     double                             atomType;
     double                             x, y, z;
-    std::vector<double>                velocity(3);
     double                             vx, vy, vz;
     double                             Fx, Fy, Fz;
-    std::vector<std::shared_ptr<Atom>> atoms;
+    Vector3D                           position;
+    Vector3D                           velocity;
+    Vector3D                           Force;
 
     std::ifstream rstfile(restartfile);
     std::string   line;
@@ -48,12 +53,14 @@ void InputReader::readRestartFile(Box& box)
 
     {
         auto atom = std::make_shared<Atom>();
-        velocity  = {vx, vy, vz};
         atom->setName(atomName);
         atom->setAtomType(atomType);
-        atom->setPosition(x, y, z);
+        position = {x, y, z};
+        velocity = {vx, vy, vz};
+        Force    = {Fx, Fy, Fz};
+        atom->setPosition(position);
         atom->setVelocity(velocity);
-        atom->setForce(Fx, Fy, Fz);
+        atom->setForce(Force);
         box.addAtom(atom);
     }
 

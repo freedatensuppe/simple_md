@@ -1,11 +1,9 @@
 #include "box.hpp"
 
 #include "atom.hpp"
+#include "vector3d.hpp"
 
-void Box::setDimensions(std::vector<double> dimensions)
-{
-    _dimensions = dimensions;
-}
+void Box::setDimensions(Vector3D dimensions) { _dimensions = dimensions; }
 
 void Box::setEnergy(double energy) { _energy = energy; }
 
@@ -17,11 +15,9 @@ Atom &Box::getAtom(const size_t index) { return *(_atoms[index]); }
 
 double Box::getEnergy() { return _energy; }
 
-void Box::applyPBC(std::vector<double> &position)
+Vector3D Box::getDimensions() { return _dimensions; }
+
+void Box::applyPBC(Box &box, Vector3D &position)
 {
-    for (auto i = 0; i < position.size(); ++i)
-    {
-        ////        position[i] -= _dimensions[i] * round(position[i] /
-        ///_dimensions[i]);
-    }
+    position -= box.getDimensions() * round(position / box.getDimensions());
 }

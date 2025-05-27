@@ -2,6 +2,7 @@
 #define POTENTIAL_HPP
 
 #include "box.hpp"
+#include "vector3d.hpp"
 
 class Potential
 {
@@ -15,10 +16,10 @@ class Potential
     double _LJForceCutoff;
 
    public:
-    void calculateEnergyForcesLJ(Box &box);
+    void calculateEnergyForcesLJ(Box& box);
     //    void calculateForcesLJ(Box &box);
 
-    void setLJCutoff(std::vector<double> dimensions);
+    void setLJCutoff(Vector3D dimensions);
     void setljEnergyCutoff(std::vector<double> dimensions);
     void setljForceCutoff(double ljForceCutoff);
 

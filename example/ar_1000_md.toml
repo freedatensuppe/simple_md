@@ -11,6 +11,7 @@ coulomb_cut = 12.5
 
 [FF]
 
-epsilon = 0.23806458033
+#epsilon = 0.23806458033 # kcal/mol
+epsilon = 0.997 # kJ/mol
 sigma   = 3.4
 

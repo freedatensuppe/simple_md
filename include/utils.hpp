@@ -3,16 +3,10 @@
 
 #include <vector>
 
-double calculateDistance(
-    std::vector<double> a,
-    std::vector<double> b,
-    std::vector<double> dimensions
-);
+#include "vector3d.hpp"
 
-std::vector<double> calculateDistanceVector(
-    std::vector<double> a,
-    std::vector<double> b,
-    std::vector<double> dimensions
-);
+double calculateDistance(Vector3D a, Vector3D b, Vector3D dimensions);
+
+Vector3D calculateDistanceVector(Vector3D a, Vector3D b, Vector3D dimensions);
 
 #endif

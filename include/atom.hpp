@@ -4,30 +4,32 @@
 #include <string>
 #include <vector>
 
+#include "vector3d.hpp"
+
 class Atom
 {
    private:
-    std::string         _atomName;
-    double              _atomType;
-    std::vector<double> _position;
-    std::vector<double> _positionPrev;
-    std::vector<double> _velocity;
-    std::vector<double> _force;
+    std::string _atomName;
+    double      _atomType;
+    Vector3D    _position;
+    Vector3D    _positionPrev;
+    Vector3D    _velocity;
+    Vector3D    _force;
 
    public:
     void setName(const std::string& atomName);
     void setAtomType(double atomType);
-    void setPosition(double x, double y, double z);
-    void setVelocity(std::vector<double>& velocity);
-    void setForce(double Fx, double Fy, double Fz);
+    void setPosition(Vector3D& position);
+    void setVelocity(Vector3D& velocity);
+    void setForce(Vector3D& force);
 
-    void addForce(std::vector<double>& force);
-    void updatePosition(std::vector<double>& shift);
+    void addForce(Vector3D& force);
+    void updatePosition(Vector3D& shift);
 
-    std::string         getName();
-    std::vector<double> getPosition();
-    std::vector<double> getVelocity();
-    std::vector<double> getForce();
+    std::string getName();
+    Vector3D    getPosition();
+    Vector3D    getVelocity();
+    Vector3D    getForce();
 };
 
 #endif

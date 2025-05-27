@@ -1,32 +1,45 @@
 #include "integrator.hpp"
 
+#include "vector3d.hpp"
+
 void Integrator::integrateVelocities(Atom *atom)
 {
-    auto       velocity = atom->getVelocity();
-    const auto force    = atom->getForce();
-    const auto mass     = 39.948;
-    const auto dt       = 0.5;
+    Vector3D velocity = atom->getVelocity();
+    auto     force    = atom->getForce();
+    auto     mass     = 39.948;
+    auto     dt       = 0.5;
 
-    for (auto i = 0; i < velocity.size(); ++i)
-    {
-        velocity[i] += dt * force[i] / mass;
-    }
-
+    velocity += dt * force / mass;
     atom->setVelocity(velocity);
 }
 
-void Integrator::updatePosition(Atom *atom)
+void Integrator::integratePositions(Atom *atom, Box &box)
+
 {
-    //    auto       position = atom->getPosition();
-    //    const auto velocity = atom->getVelocity();
-    //
-    //    position += 2.0 * velocity;
-    //
-    //    simBox.applyPBC(position);
-    //
-    //    atom->setPosition(position);
+    auto position = atom->getPosition();
+    auto velocity = atom->getVelocity();
+    auto dt       = 0.5;
+
+    position += dt * velocity;
+
+    box.applyPBC(box, position);
+
+    atom->setPosition(position);
 }
 
-void Integrator::firstStep(Box &box) {}
+void Integrator::firstStep(Box &box)
+{
+    for (auto &atom : box.getAtoms())
+    {
+        integrateVelocities(atom.get());
+        integratePositions(atom.get(), box);
+    }
+}
 
-void Integrator::secondStep(Box &box) {}
+void Integrator::secondStep(Box &box)
+{
+    for (auto &atom : box.getAtoms())
+    {
+        integrateVelocities(atom.get());
+    }
+}

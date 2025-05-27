@@ -1,40 +1,24 @@
 #include "utils.hpp"
 
 #include <cmath>
-#include <vector>
 
-double calculateDistance(
-    std::vector<double> a,
-    std::vector<double> b,
-    std::vector<double> dimensions
-)
+#include "vector3d.hpp"
+
+double calculateDistance(Vector3D a, Vector3D b, Vector3D dimensions)
 {
-    double distance = 0;
-    double dist     = 0;
-    for (size_t i = 0; i < a.size(); ++i)
-    {
-        double dist = (a[i] - b[i]) -
-                      (dimensions[i] * round((a[i] - b[i]) / dimensions[i]));
-
-        distance += dist * dist;
-    }
-    distance = std::sqrt(distance);
+    double distance = magnitude(b - a);
     return distance;
 }
 
-std::vector<double> calculateDistanceVector(
-    std::vector<double> a,
-    std::vector<double> b,
-    std::vector<double> dimensions
-)
+Vector3D calculateDistanceVector(Vector3D a, Vector3D b, Vector3D dimensions)
 {
-    std::vector<double> distanceVector(3);
+    Vector3D distanceVector;
+    distanceVector.x =
+        (b.x - a.x) - (dimensions.x * round((b.x - a.x) / dimensions.x));
+    distanceVector.y =
+        (b.y - a.y) - (dimensions.y * round((b.y - a.y) / dimensions.y));
+    distanceVector.z =
+        (b.z - a.z) - (dimensions.z * round((b.z - a.z) / dimensions.z));
 
-    for (auto i = 0; i < a.size(); ++i)
-    {
-        distanceVector[i] =
-            (a[i] - b[i]) -
-            (dimensions[i] * round((a[i] - b[i]) / dimensions[i]));
-    }
     return distanceVector;
 }
