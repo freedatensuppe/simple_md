@@ -6,18 +6,21 @@
 
 void Thermostat::calculateTemperature(Box& box)
 {
-    double k_B      = 1.380649e-23;   // J/K
-    double momentum = 0.0;
+    double k_B               = 1.380649e-23;   // J/K
+    double momentum          = 0.0;
+    double A_to_m            = 1e-10;
+    double u_to_kg           = 1.66053906892e-27;
+    double conversion_factor = A_to_m * A_to_m * u_to_kg / k_B;
 
     for (auto& atom : box.getAtoms())
     {
-        double mass     = atom->getMass() * 1.66053906892e-27;   // u to kg
-        auto   velocity = atom->getVelocity() * 10e-10;          // A/s to m/s
+        double mass             = atom->getMass();       // u to kg
+        auto   velocity         = atom->getVelocity();   // A/s to m/s
         double velocitySquared  = magnitudeSquared(velocity);
         momentum               += mass * velocitySquared;
     }
 
-    _temperature = momentum / (3 * box.getAtoms().size() * k_B * 1000);
+    _temperature = momentum * conversion_factor / (3 * box.getAtoms().size());
 }
 
 void Thermostat::applyThermostat(Box& box)

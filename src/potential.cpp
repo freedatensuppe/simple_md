@@ -3,7 +3,6 @@
 #include <bits/stdc++.h>
 
 #include <cmath>
-#include <iostream>
 #include <vector>
 
 #include "box.hpp"

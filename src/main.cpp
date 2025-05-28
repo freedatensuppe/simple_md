@@ -34,14 +34,19 @@ int main(int argc, char* argv[])
     double      timestep    = config["MDSettings"]["nsteps"].value_or(0.5);
     double      temperature = config["MDSettings"]["nsteps"].value_or(0.0);
 
-    //    Atom atom0 = box.getAtom(0);
-    //    Atom atom1 = box.getAtom(1);
-    //
-    //    Vector3D pos0 = atom0.getPosition();
-    //    Vector3D pos1 = atom1.getPosition();
-    //
-    //    pos0.print();
-    //    pos1.print();
+    Atom atom0 = box.getAtom(0);
+    Atom atom1 = box.getAtom(1);
+
+    Vector3D pos0 = atom0.getPosition();
+    Vector3D pos1 = atom1.getPosition();
+
+    Vector3D vel0 = atom0.getVelocity();
+    Vector3D vel1 = atom1.getVelocity();
+
+    pos0.print();
+    pos1.print();
+    vel0.print();
+    vel1.print();
     thermostat.calculateTemperature(box);
 
     for (int i = 0; i < 100; ++i)
