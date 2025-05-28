@@ -17,9 +17,11 @@ class Potential
 
    public:
     void calculateEnergyForcesLJ(Box& box);
+
+    void Potential::calculateEnergyForcesLJCellList(Box& box);
     //    void calculateForcesLJ(Box &box);
 
-    void setLJCutoff(Vector3D dimensions);
+    void setLJCutoff(double sigma);
     void setljEnergyCutoff(std::vector<double> dimensions);
     void setljForceCutoff(double ljForceCutoff);
 

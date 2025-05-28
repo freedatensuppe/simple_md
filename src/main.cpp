@@ -4,6 +4,7 @@
 #include "box.hpp"
 #include "input.hpp"
 #include "integrator.hpp"
+#include "linkedCellList.hpp"
 #include "output.hpp"
 #include "potential.hpp"
 #include "thermostat.hpp"
@@ -25,7 +26,9 @@ int main(int argc, char* argv[])
     inputreader.readRestartFile(box);
     Output output;
 
-    potential.setLJCutoff(box.getDimensions());
+    double sigma = 3.4;   // 3.4 angs
+
+    potential.setLJCutoff(sigma);
     std::cout << "\nLJ Cutoff:" << potential.getLJCutoff() << std::endl;
     std::cout << "Natoms:" << box.getAtoms().size() << std::endl;
 
@@ -34,22 +37,16 @@ int main(int argc, char* argv[])
     double      timestep    = config["MDSettings"]["nsteps"].value_or(0.5);
     double      temperature = config["MDSettings"]["nsteps"].value_or(0.0);
 
-    Atom atom0 = box.getAtom(0);
-    Atom atom1 = box.getAtom(1);
+    std::cout << "numcellsX:"
+              << std::floor(box.getDimensions().minElement() / 8.5)
+              << std::endl;
 
-    Vector3D pos0 = atom0.getPosition();
-    Vector3D pos1 = atom1.getPosition();
-
-    Vector3D vel0 = atom0.getVelocity();
-    Vector3D vel1 = atom1.getVelocity();
-
-    pos0.print();
-    pos1.print();
-    vel0.print();
-    vel1.print();
     thermostat.calculateTemperature(box);
 
-    for (int i = 0; i < 100; ++i)
+    CellList cells = createLinkedCellList(box);
+    printLinkedCellList(cells, box);
+
+    for (int i = 0; i < 5; ++i)
     {
         potential.calculateEnergyForcesLJ(box);
 
@@ -61,11 +58,6 @@ int main(int argc, char* argv[])
         thermostat.calculateTemperature(box);
         thermostat.applyThermostat(box);
     }
-    //    Vector3D v1 = {0.0, 0.0, 0.0};
-    //    Vector3D v2 = {13.478100, -17.733801, -10.077600};
-    //    Vector3D v3 = v1 - v2;
-    //    v3.print();
-    // std::cout << v3.magnitude() << std::endl;
 
     std::cout << "SUCCESS" << std::endl;
 
