@@ -9,7 +9,7 @@ void Integrator::integrateVelocities(Atom *atom)
     auto     mass     = atom->getMass();
     auto     dt       = 2.0E-15;
 
-    velocity += dt * force / mass;
+    velocity += (force / mass) * dt;
     atom->setVelocity(velocity);
 }
 
@@ -20,7 +20,7 @@ void Integrator::integratePositions(Atom *atom, Box &box)
     auto velocity = atom->getVelocity();
     auto dt       = 2.0E-15;
 
-    position += dt * velocity;
+    position += velocity * dt;
 
     box.applyPBC(box, position);
 

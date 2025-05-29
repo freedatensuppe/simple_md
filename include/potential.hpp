@@ -2,7 +2,7 @@
 #define POTENTIAL_HPP
 
 #include "box.hpp"
-#include "vector3d.hpp"
+#include "linkedCellList.hpp"
 
 class Potential
 {
@@ -18,14 +18,18 @@ class Potential
    public:
     void calculateEnergyForcesLJ(Box& box);
 
-    void Potential::calculateEnergyForcesLJCellList(Box& box);
+    void calculateEnergyForcesLJCellList(
+        Box&                  box,
+        std::vector<AtomPair> atomPairs
+    );
+
     //    void calculateForcesLJ(Box &box);
 
     void setLJCutoff(double sigma);
     void setljEnergyCutoff(std::vector<double> dimensions);
     void setljForceCutoff(double ljForceCutoff);
 
-    double getLJCutoff() { return _LJCutoff; }
+    double getLJCutoff();
 };
 
 #endif

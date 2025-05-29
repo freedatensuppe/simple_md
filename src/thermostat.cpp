@@ -21,6 +21,7 @@ void Thermostat::calculateTemperature(Box& box)
     }
 
     _temperature = momentum * conversion_factor / (3 * box.getAtoms().size());
+    box.setTemperature(_temperature);
 }
 
 void Thermostat::applyThermostat(Box& box)

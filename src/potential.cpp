@@ -6,8 +6,11 @@
 #include <vector>
 
 #include "box.hpp"
+#include "linkedCellList.hpp"
 #include "utils.hpp"
 #include "vector3d.hpp"
+
+double Potential::getLJCutoff() { return _LJCutoff; }
 
 void Potential::setLJCutoff(double sigma) { _LJCutoff = 2.5 * sigma; }
 
@@ -85,7 +88,10 @@ void Potential::calculateEnergyForcesLJ(Box& box)
     box.setEnergy(total_energy);
 }
 
-void Potential::calculateEnergyForcesLJCellList(Box& box)
+void Potential::calculateEnergyForcesLJCellList(
+    Box&                  box,
+    std::vector<AtomPair> atomPairs
+)
 {
     double total_energy = 0.00;
 
@@ -117,42 +123,34 @@ void Potential::calculateEnergyForcesLJCellList(Box& box)
     double F_cut = 4 * epsilon * (12 * sigma_12 / (LJCutoff_12 * LJCutoff)) -
                    (6 * sigma_6 / (LJCutoff_6 * LJCutoff));
 
-    for (size_t i = 0; i <= box.getAtoms().size(); ++i)
+    for (auto& atomPair : atomPairs)
     {
-        for (size_t j = i + 1; j <= box.getAtoms().size() - 1; ++j)
+        r_sq = calculateDistanceSquared(
+            box.getAtom(atomPair.first).getPosition(),
+            box.getAtom(atomPair.second).getPosition(),
+            dimensions
+        );
+
+        if (r < LJCutoff)
         {
-            r_sq = calculateDistanceSquared(
-                box.getAtom(i).getPosition(),
-                box.getAtom(j).getPosition(),
+            r    = sqrt(r_sq);
+            r_6  = r_sq * r_sq * r_sq;
+            r_12 = r_6 * r_6;
+
+            rVector = calculateDistanceVector(
+                box.getAtom(atomPair.first).getPosition(),
+                box.getAtom(atomPair.second).getPosition(),
                 dimensions
             );
 
-            //            std::cout << i << std::endl;
-            //            box.getAtom(i).getPosition().print();
-            //            std::cout << j << std::endl;
-            //            box.getAtom(j).getPosition().print();
+            total_energy += 4 * epsilon * sigma_12 / r_12 - sigma_6 / r_6;
 
-            if (r_sq < LJCutoff * LJCutoff)
-            {
-                r    = sqrt(r_sq);
-                r_6  = r_sq * r_sq * r_sq;
-                r_12 = r_6 * r_6;
+            F = 4 * epsilon *
+                (12 * sigma_12 / (r_12 * r) - 6 * sigma_6 / (r_6 * r));
 
-                rVector = calculateDistanceVector(
-                    box.getAtom(i).getPosition(),
-                    box.getAtom(j).getPosition(),
-                    dimensions
-                );
+            F_vector = F * rVector / r;
 
-                total_energy += 4 * epsilon * sigma_12 / r_12 - sigma_6 / r_6;
-
-                F = 4 * epsilon *
-                    (12 * sigma_12 / (r_12 * r) - 6 * sigma_6 / (r_6 * r));
-
-                F_vector = F * rVector / r;
-
-                box.getAtom(i).addForce(F_vector);
-            }
+            box.getAtom(atomPair.first).addForce(F_vector);
         }
     }
 

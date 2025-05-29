@@ -29,6 +29,6 @@ void Output::writeXYZTrajectory(Box& box)
 void Output::writeEnergyFile(Box& box)
 {
     std::ofstream outenergy("output_energy.dat", std::ios_base::app);
-    outenergy << box.getEnergy() << std::endl;
+    outenergy << box.getEnergy() << " " << box.getTemperature() << std::endl;
     outenergy.close();
 }

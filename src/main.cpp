@@ -37,21 +37,23 @@ int main(int argc, char* argv[])
     double      timestep    = config["MDSettings"]["nsteps"].value_or(0.5);
     double      temperature = config["MDSettings"]["nsteps"].value_or(0.0);
 
-    std::cout << "numcellsX:"
-              << std::floor(box.getDimensions().minElement() / 8.5)
+    std::cout << "numcellsX:" << std::floor(box.getDimensions().min() / 8.5)
               << std::endl;
 
     thermostat.calculateTemperature(box);
 
-    CellList cells = createLinkedCellList(box);
-    printLinkedCellList(cells, box);
-
-    for (int i = 0; i < 5; ++i)
+    for (int i = 0; i < 10000; ++i)
     {
-        potential.calculateEnergyForcesLJ(box);
+        CellList cellList = createLinkedCellList(box);
+        //    printLinkedCellList(cellList, box);
+        std::vector<AtomPair> atomPairs = createNeighborAtomPairs(cellList);
+        potential.calculateEnergyForcesLJCellList(box, atomPairs);
 
-        std::cout << "Step: " << i << " T: " << thermostat.getTemperature()
-                  << " E: " << box.getEnergy() << " kcal/mol" << std::endl;
+        if (i % 1000 == 0)
+        {
+            std::cout << "Step: " << i << " T: " << thermostat.getTemperature()
+                      << " E: " << box.getEnergy() << " kcal/mol" << std::endl;
+        }
         output.writeAllOutput(box);
         integrator.firstStep(box);
         integrator.secondStep(box);

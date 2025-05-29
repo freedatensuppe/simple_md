@@ -6,6 +6,7 @@
 #include "box.hpp"
 
 using CellList = std::vector<std::vector<std::vector<std::list<size_t>>>>;
+using AtomPair = std::pair<size_t, size_t>;
 
 CellList createLinkedCellList(Box& box);
 void     printLinkedCellList(CellList& cellList, Box& box);
@@ -18,5 +19,12 @@ std::vector<std::tuple<int, int, int>> getNeighboringCells(
     int nCellsY,
     int nCellsZ
 );
+
+std::list<std::tuple<int, int, int>> getCells(
+    int nCellsX,
+    int nCellsY,
+    int nCellsZ
+);
+std::vector<AtomPair> createNeighborAtomPairs(const CellList& cellList);
 
 #endif
