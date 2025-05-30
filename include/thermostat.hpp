@@ -11,8 +11,10 @@ class Thermostat
     double _tau               = 250.0;   // fs
 
    public:
-    void   calculateTemperature(Box& box);
-    void   applyThermostat(Box& box);
+    void calculateTemperature(Box& box);
+    void applyBerendsenThermostat(Box& box);
+
+    void   applyBussiThermostat(Box& box);
     double getTemperature();
 };
 

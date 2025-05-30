@@ -19,7 +19,7 @@ class Atom
 
    public:
     void setName(const std::string& atomName);
-    void setAtomType(double atomType);
+    void setAtomType(double& atomType);
     void setPosition(Vector3D& position);
     void setVelocity(Vector3D& velocity);
     void setForce(Vector3D& force);
@@ -30,9 +30,9 @@ class Atom
 
     std::string getName();
     double      getMass();
-    Vector3D    getPosition();
-    Vector3D    getVelocity();
-    Vector3D    getForce();
+    Vector3D&   getPosition();
+    Vector3D&   getVelocity();
+    Vector3D&   getForce();
 };
 
 #endif

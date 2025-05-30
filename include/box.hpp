@@ -21,7 +21,7 @@ class Box
 
     void  addAtom(const std::shared_ptr<Atom> atom);
     Atom& getAtom(const size_t index);
-    std::vector<std::shared_ptr<Atom>> getAtoms();
+    std::vector<std::shared_ptr<Atom>>& getAtoms();
 
     double x() { return _dimensions.x; }
     double y() { return _dimensions.y; }

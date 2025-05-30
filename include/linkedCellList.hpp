@@ -5,7 +5,7 @@
 
 #include "box.hpp"
 
-using CellList = std::vector<std::vector<std::vector<std::list<size_t>>>>;
+using CellList = std::vector<std::vector<std::vector<std::vector<size_t>>>>;
 using AtomPair = std::pair<size_t, size_t>;
 
 CellList createLinkedCellList(Box& box);

@@ -4,6 +4,7 @@
 #include "box.hpp"
 #include "input.hpp"
 #include "integrator.hpp"
+#include "kinetics.hpp"
 #include "linkedCellList.hpp"
 #include "output.hpp"
 #include "potential.hpp"
@@ -14,17 +15,16 @@ int main(int argc, char* argv[])
     const std::string configfile = argv[1];
 
     InputReader inputreader;
+    Box         box;
+    Potential   potential;
+    Kinetics    kinetics;
+    Integrator  integrator;
+    Thermostat  thermostat;
+    Output      output;
 
     inputreader.readConfigToml(configfile);
     inputreader.printConfigToml();
-
-    Box        box;
-    Potential  potential;
-    Integrator integrator;
-    Thermostat thermostat;
-
     inputreader.readRestartFile(box);
-    Output output;
 
     double sigma = 3.4;   // 3.4 angs
 
@@ -42,23 +42,37 @@ int main(int argc, char* argv[])
 
     thermostat.calculateTemperature(box);
 
-    for (int i = 0; i < 10000; ++i)
+    for (int i = 0; i < 1000; ++i)
     {
         CellList cellList = createLinkedCellList(box);
         //    printLinkedCellList(cellList, box);
         std::vector<AtomPair> atomPairs = createNeighborAtomPairs(cellList);
         potential.calculateEnergyForcesLJCellList(box, atomPairs);
+        kinetics.calculateKineticEnergy(box);
+        box.setEnergy(
+            potential.getPotentialEnergy() + kinetics.getKineticEnergy()
+        );
 
-        if (i % 1000 == 0)
+        std::cout << "Step: " << i << " T: " << thermostat.getTemperature()
+                  << " Ekin: " << kinetics.getKineticEnergy() << " kcal"
+                  << " Epot: " << potential.getPotentialEnergy() << " kcal"
+                  << std::endl;
+        //        std::cout << "Force: " << box.getAtoms()[0]->getForce().x << "
+        //        "
+        //                  << box.getAtoms()[0]->getForce().y << " "
+        //                  << box.getAtoms()[0]->getForce().z << std::endl;
+        //        std::cout << "Velocity: " <<
+        //        box.getAtoms()[0]->getVelocity().x << " "
+        //                  << box.getAtoms()[0]->getVelocity().y << " "
+        //                  << box.getAtoms()[0]->getVelocity().z << std::endl;
+        if (i % 2 == 0)
         {
-            std::cout << "Step: " << i << " T: " << thermostat.getTemperature()
-                      << " E: " << box.getEnergy() << " kcal/mol" << std::endl;
+            output.writeAllOutput(box);
         }
-        output.writeAllOutput(box);
         integrator.firstStep(box);
         integrator.secondStep(box);
         thermostat.calculateTemperature(box);
-        thermostat.applyThermostat(box);
+        thermostat.applyBussiThermostat(box);
     }
 
     std::cout << "SUCCESS" << std::endl;

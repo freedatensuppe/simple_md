@@ -7,7 +7,7 @@
 class Potential
 {
    private:
-    double _totalEnergy;
+    double _potentialEnergy;
     double _c6;
     double _c12;
 
@@ -19,8 +19,8 @@ class Potential
     void calculateEnergyForcesLJ(Box& box);
 
     void calculateEnergyForcesLJCellList(
-        Box&                  box,
-        std::vector<AtomPair> atomPairs
+        Box&                   box,
+        std::vector<AtomPair>& atomPairs
     );
 
     //    void calculateForcesLJ(Box &box);
@@ -30,6 +30,8 @@ class Potential
     void setljForceCutoff(double ljForceCutoff);
 
     double getLJCutoff();
+
+    double getPotentialEnergy();
 };
 
 #endif

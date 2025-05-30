@@ -8,6 +8,7 @@ class Vector3D
 
     Vector3D();
     Vector3D(double x_, double y_, double z_);
+    Vector3D operator-() const;
 
     Vector3D operator+(const Vector3D& rhs);
     Vector3D operator-(const Vector3D& rhs);
