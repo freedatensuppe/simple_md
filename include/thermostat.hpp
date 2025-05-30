@@ -16,6 +16,9 @@ class Thermostat
 
     void   applyBussiThermostat(Box& box);
     double getTemperature();
+
+    void   setTargetTemperature(double T);
+    double getTargetTemperature();
 };
 
 #endif

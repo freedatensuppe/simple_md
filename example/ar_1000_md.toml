@@ -1,17 +1,11 @@
 [MDSettings]
 
 nsteps      = 1000
-timestep    = 0.5
+timestep    = 2.0
 temperature = 77.0
 restart_file = "ar_1000_md.rst"
 
-[Potential]
-
-coulomb_cut = 12.5
-
 [FF]
 
-#epsilon = 0.23806458033 # kcal/mol
-epsilon = 0.997 # kJ/mol
-sigma   = 3.4
-
+epsilon = 0.23806458033
+sigma = 3.4

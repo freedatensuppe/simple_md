@@ -10,10 +10,6 @@
 #include "utils.hpp"
 #include "vector3d.hpp"
 
-double Potential::getLJCutoff() { return _LJCutoff; }
-
-void Potential::setLJCutoff(double sigma) { _LJCutoff = 2.5 * sigma; }
-
 void Potential::calculateEnergyForcesLJCellList(
     Box&                   box,
     std::vector<AtomPair>& atomPairs
@@ -23,12 +19,7 @@ void Potential::calculateEnergyForcesLJCellList(
 
     Vector3D dimensions = box.getDimensions();
     double   LJCutoff   = getLJCutoff();
-    double   epsilon    = 0.23806458033;   // kcal / mol
-    double   sigma      = 3.4;             // 3.4 angs
-
-    double sigma_6  = sigma * sigma * sigma * sigma * sigma * sigma;
-    double sigma_12 = sigma_6 * sigma_6;
-    double LJCutoff_6 =
+    double   LJCutoff_6 =
         LJCutoff * LJCutoff * LJCutoff * LJCutoff * LJCutoff * LJCutoff;
     double LJCutoff_12 = LJCutoff_6 * LJCutoff_6;
 
@@ -42,10 +33,9 @@ void Potential::calculateEnergyForcesLJCellList(
 
     Vector3D rVector(0.0, 0.0, 0.0);
 
-    double V_Cut =
-        4 * epsilon * (sigma_12 / LJCutoff_12 - sigma_6 / LJCutoff_6);
-    double F_cut = 4 * epsilon * (12 * sigma_12 / (LJCutoff_12 * LJCutoff)) -
-                   (6 * sigma_6 / (LJCutoff_6 * LJCutoff));
+    double V_Cut = _c12 / LJCutoff_12 - _c6 / LJCutoff_6;
+    double F_cut = 12 * _c12 / (LJCutoff_12 * LJCutoff) -
+                   6 * _c6 / (LJCutoff_6 * LJCutoff);
 
     for (auto& atom : box.getAtoms())
     {
@@ -74,12 +64,9 @@ void Potential::calculateEnergyForcesLJCellList(
                 dimensions
             );
 
-            total_energy +=
-                4 * epsilon * (sigma_12 / r_12 - sigma_6 / r_6) - V_Cut;
+            total_energy += _c12 / r_12 - _c6 / r_6 - V_Cut;
 
-            F = 4 * epsilon *
-                    (12 * sigma_12 / (r_12 * r) - 6 * sigma_6 / (r_6 * r)) -
-                F_cut;
+            F = 12 * _c12 / (r_12 * r) - 6 * _c6 / (r_6 * r) - F_cut;
 
             F_vector = F * rVector / r;
 
@@ -102,6 +89,20 @@ void Potential::calculateEnergyForcesLJCellList(
     _potentialEnergy = total_energy / 6.02214076e23;
 }
 
+void Potential::setc6(double epsilon, double sigma)
+{
+    _c6 = 4 * epsilon * (pow(sigma, 6));
+}
+void Potential::setc12(double epsilon, double sigma)
+{
+    _c12 = 4 * epsilon * (pow(sigma, 12));
+}
+
+void Potential::setLJCutoff(double sigma) { _LJCutoff = 2.5 * sigma; }
+
+double Potential::getc6() { return _c6; }
+double Potential::getc12() { return _c12; }
+double Potential::getLJCutoff() { return _LJCutoff; }
 double Potential::getPotentialEnergy() { return _potentialEnergy; }
 
 // void Potential::calculateEnergyForcesLJ(Box& box)

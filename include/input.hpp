@@ -11,7 +11,7 @@ class InputReader
     toml::table       _config;
 
    public:
-    toml::table get_config();
+    toml::table getConfig();
     void        readConfigToml(const std::string _configfile);
     void        printConfigToml();
     void        readRestartFile(Box &box);

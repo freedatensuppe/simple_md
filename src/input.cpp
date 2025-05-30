@@ -3,6 +3,7 @@
 #include <fstream>
 #include <iostream>
 #include <memory>
+#include <ostream>
 #include <string>
 
 #include "atom.hpp"
@@ -10,14 +11,18 @@
 #include "toml.hpp"
 #include "vector3d.hpp"
 
-toml::table InputReader::get_config() { return _config; }
+toml::table InputReader::getConfig() { return _config; }
 
 void InputReader::readConfigToml(const std::string _configfile)
 {
     _config = toml::parse_file(_configfile);
 }
 
-void InputReader::printConfigToml() { std::cout << _config << std::endl; }
+void InputReader::printConfigToml()
+{
+    std::cout << "Provided TOML input file:" << std::endl;
+    std::cout << _config << std::endl;
+}
 
 void InputReader::readRestartFile(Box& box)
 {

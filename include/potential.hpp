@@ -16,21 +16,19 @@ class Potential
     double _LJForceCutoff;
 
    public:
-    void calculateEnergyForcesLJ(Box& box);
-
+    //    void calculateEnergyForcesLJ(Box& box);
     void calculateEnergyForcesLJCellList(
         Box&                   box,
         std::vector<AtomPair>& atomPairs
     );
 
-    //    void calculateForcesLJ(Box &box);
-
+    void setc6(double epsilon, double sigma);
+    void setc12(double epsilon, double sigma);
     void setLJCutoff(double sigma);
-    void setljEnergyCutoff(std::vector<double> dimensions);
-    void setljForceCutoff(double ljForceCutoff);
 
+    double getc6();
+    double getc12();
     double getLJCutoff();
-
     double getPotentialEnergy();
 };
 

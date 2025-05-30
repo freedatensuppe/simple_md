@@ -8,6 +8,7 @@
 #include "linkedCellList.hpp"
 #include "output.hpp"
 #include "potential.hpp"
+#include "setup.hpp"
 #include "thermostat.hpp"
 
 int main(int argc, char* argv[])
@@ -21,24 +22,28 @@ int main(int argc, char* argv[])
     Integrator  integrator;
     Thermostat  thermostat;
     Output      output;
+    Setup       setup;
 
-    inputreader.readConfigToml(configfile);
-    inputreader.printConfigToml();
-    inputreader.readRestartFile(box);
+    setup.setupSystem(
+        box,
+        configfile,
+        inputreader,
+        integrator,
+        potential,
+        thermostat
+    );
 
-    double sigma = 3.4;   // 3.4 angs
+    toml::table config = inputreader.getConfig();
 
-    potential.setLJCutoff(sigma);
-    std::cout << "\nLJ Cutoff:" << potential.getLJCutoff() << std::endl;
-    std::cout << "Natoms:" << box.getAtoms().size() << std::endl;
+    int nsteps = config["MDSettings"]["nsteps"].value_or(0);
 
-    toml::table config      = inputreader.get_config();
-    int         nsteps      = config["MDSettings"]["nsteps"].value_or(0);
-    double      timestep    = config["MDSettings"]["nsteps"].value_or(0.5);
-    double      temperature = config["MDSettings"]["nsteps"].value_or(0.0);
-
-    std::cout << "numcellsX:" << std::floor(box.getDimensions().min() / 8.5)
+    std::cout << "\nSettings chosen for the Simulation:" << std::endl;
+    std::cout << "Natoms: " << box.getAtoms().size() << std::endl;
+    std::cout << "nsteps: " << nsteps << std::endl;
+    std::cout << "timestep: " << integrator.getTimestep() << std::endl;
+    std::cout << "temperature: " << thermostat.getTargetTemperature()
               << std::endl;
+    std::cout << "\nLJ Cutoff: " << potential.getLJCutoff() << std::endl;
 
     thermostat.calculateTemperature(box);
 

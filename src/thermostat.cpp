@@ -65,3 +65,6 @@ void Thermostat::applyBussiThermostat(Box& box)
 }
 
 double Thermostat::getTemperature() { return _temperature; }
+
+void   Thermostat::setTargetTemperature(double T) { _targetTemperature = T; }
+double Thermostat::getTargetTemperature() { return _targetTemperature; }
