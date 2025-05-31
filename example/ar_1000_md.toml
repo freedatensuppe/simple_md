@@ -1,11 +1,12 @@
 [MDSettings]
 
-nsteps      = 1000
+nsteps      = 25000
 timestep    = 2.0
-temperature = 77.0
+temperature = 298.15
 restart_file = "ar_1000_md.rst"
 
 [FF]
 
 epsilon = 0.23806458033
 sigma = 3.4
+

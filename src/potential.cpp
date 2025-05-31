@@ -15,6 +15,7 @@ void Potential::calculateEnergyForcesLJCellList(
     std::vector<AtomPair>& atomPairs
 )
 {
+    _potentialEnergy    = 0.0;
     double total_energy = 0.00;
 
     Vector3D dimensions = box.getDimensions();
@@ -23,8 +24,7 @@ void Potential::calculateEnergyForcesLJCellList(
         LJCutoff * LJCutoff * LJCutoff * LJCutoff * LJCutoff * LJCutoff;
     double LJCutoff_12 = LJCutoff_6 * LJCutoff_6;
 
-    double   F = 0.0;
-    Vector3D F_vector;
+    double F = 0.0;
 
     double r    = 0.00;
     double r_sq = 0.00;
@@ -37,18 +37,14 @@ void Potential::calculateEnergyForcesLJCellList(
     double F_cut = 12 * _c12 / (LJCutoff_12 * LJCutoff) -
                    6 * _c6 / (LJCutoff_6 * LJCutoff);
 
-    for (auto& atom : box.getAtoms())
-    {
-        atom->setForce(rVector);
-    }
-
     for (auto& atomPair : atomPairs)
     {
-        r_sq = calculateDistanceSquared(
-            box.getAtoms()[atomPair.first]->getPosition(),
-            box.getAtoms()[atomPair.second]->getPosition(),
-            dimensions
+        rVector = calculateDistanceVector(
+            box.getAtom(atomPair.first).getPosition(),
+            box.getAtom(atomPair.second).getPosition(),
+            box
         );
+        r_sq = magnitudeSquared(rVector);
 
         if (r_sq < LJCutoff * LJCutoff)
         {
@@ -58,37 +54,30 @@ void Potential::calculateEnergyForcesLJCellList(
 
             Vector3D F_vector(0.0, 0.0, 0.0);
 
-            rVector = calculateDistanceVector(
-                box.getAtoms()[atomPair.first]->getPosition(),
-                box.getAtoms()[atomPair.second]->getPosition(),
-                dimensions
-            );
-
             total_energy += _c12 / r_12 - _c6 / r_6 - V_Cut;
 
             F = 12 * _c12 / (r_12 * r) - 6 * _c6 / (r_6 * r) - F_cut;
 
             F_vector = F * rVector / r;
 
-            //            std::cout << " i: " << atomPair.first << " j: " <<
-            //            atomPair.second
-            //                      << " r: " << r << " r_sq: " << r_sq
-            //                      << " rVector: " << rVector.x << " " <<
-            //                      rVector.y << " "
-            //                      << rVector.z << " F_VectoF_: " << F_vector.x
-            //                      << " "
-            //                      << F_vector.y << " " << F_vector.z << " E  "
-            //                      << 4 * epsilon * (sigma_12 / r_12 - sigma_6
-            //                      / r_6) - V_Cut
-            //                      << " F: " << F << std::endl;
-
-            box.getAtoms()[atomPair.first]->addForce(F_vector);
-            box.getAtoms()[atomPair.second]->addForce(F_vector *= -1.0);
+            box.getAtoms()[atomPair.second]->addForce(F_vector);
+            box.getAtoms()[atomPair.first]->addForce(F_vector *= -1.0);
         }
     }
-    _potentialEnergy = total_energy / 6.02214076e23;
+    _potentialEnergy = total_energy;   // kcal
 }
 
+void Potential::resetForces(Box& box)
+{
+    Vector3D zeroVec(0.0, 0.0, 0.0);
+    for (auto& atom : box.getAtoms())
+    {
+        atom->setForce(zeroVec);
+    }
+}
+
+void Potential::setEpsilon(double epsilon) { _epsilon = epsilon; }
+void Potential::setSigma(double sigma) { _sigma = sigma; }
 void Potential::setc6(double epsilon, double sigma)
 {
     _c6 = 4 * epsilon * (pow(sigma, 6));
@@ -100,6 +89,8 @@ void Potential::setc12(double epsilon, double sigma)
 
 void Potential::setLJCutoff(double sigma) { _LJCutoff = 2.5 * sigma; }
 
+double Potential::getEpsilon() { return _epsilon; }
+double Potential::getSigma() { return _sigma; }
 double Potential::getc6() { return _c6; }
 double Potential::getc12() { return _c12; }
 double Potential::getLJCutoff() { return _LJCutoff; }

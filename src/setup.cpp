@@ -1,5 +1,7 @@
 #include "setup.hpp"
 
+#include <iostream>
+
 #include "integrator.hpp"
 #include "potential.hpp"
 #include "toml.hpp"
@@ -34,11 +36,12 @@ void Setup::setupInput(
 
 void Setup::setupPotential(Potential& potential, toml::table config)
 {
-    double epsilon = config["FF"]["epsilon"].value_or(0.23806458033);
-    double sigma   = config["FF"]["sigma"].value_or(3.4);
+    double epsilon = config["FF"]["epsilon"].value_or(0.0);
+    double sigma   = config["FF"]["sigma"].value_or(0.0);
 
-    //    std::cout << "epsilon:" << epsilon << "sigma" << sigma << std::endl;
     potential.setLJCutoff(sigma);
+    potential.setSigma(sigma);
+    potential.setEpsilon(epsilon);
     potential.setc6(epsilon, sigma);
     potential.setc12(epsilon, sigma);
 }

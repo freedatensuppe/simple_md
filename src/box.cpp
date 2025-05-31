@@ -23,10 +23,5 @@ Vector3D Box::getDimensions() { return _dimensions; }
 
 void Box::applyPBC(Box &box, Vector3D &position)
 {
-    position.x -=
-        box.getDimensions().x * round(position.x / box.getDimensions().x);
-    position.y -=
-        box.getDimensions().y * round(position.y / box.getDimensions().y);
-    position.z -=
-        box.getDimensions().z * round(position.z / box.getDimensions().z);
+    position -= box.getDimensions() * round(position / box.getDimensions());
 }

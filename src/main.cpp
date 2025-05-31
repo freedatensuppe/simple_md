@@ -37,47 +37,49 @@ int main(int argc, char* argv[])
 
     int nsteps = config["MDSettings"]["nsteps"].value_or(0);
 
-    std::cout << "\nSettings chosen for the Simulation:" << std::endl;
+    std::cout << std::endl;
+    std::cout << "Settings chosen for the Simulation:" << std::endl;
+    std::cout << std::endl;
     std::cout << "Natoms: " << box.getAtoms().size() << std::endl;
     std::cout << "nsteps: " << nsteps << std::endl;
     std::cout << "timestep: " << integrator.getTimestep() << std::endl;
     std::cout << "temperature: " << thermostat.getTargetTemperature()
               << std::endl;
-    std::cout << "\nLJ Cutoff: " << potential.getLJCutoff() << std::endl;
+    std::cout << "LJ Cutoff: " << potential.getLJCutoff() << std::endl;
+    std::cout << "epsilon: " << potential.getEpsilon() << std::endl;
+    std::cout << "sigma: " << potential.getSigma() << std::endl;
+    std::cout << "c6: " << potential.getc6() << std::endl;
+    std::cout << "c12: " << potential.getc12() << std::endl;
+    std::cout << std::endl;
+    std::cout << "Starting MD ... " << std::endl;
 
-    thermostat.calculateTemperature(box);
-
-    for (int i = 0; i < 1000; ++i)
+    for (int i = 0; i < nsteps; ++i)
     {
-        CellList cellList = createLinkedCellList(box);
-        //    printLinkedCellList(cellList, box);
+        CellList              cellList  = createLinkedCellList(box);
         std::vector<AtomPair> atomPairs = createNeighborAtomPairs(cellList);
+
+        integrator.firstStep(box);
+
+        potential.resetForces(box);
         potential.calculateEnergyForcesLJCellList(box, atomPairs);
+
+        integrator.secondStep(box);
+
+        thermostat.calculateTemperature(box);
+        thermostat.applyBussiThermostat(box);
+
         kinetics.calculateKineticEnergy(box);
         box.setEnergy(
             potential.getPotentialEnergy() + kinetics.getKineticEnergy()
         );
-
-        std::cout << "Step: " << i << " T: " << thermostat.getTemperature()
-                  << " Ekin: " << kinetics.getKineticEnergy() << " kcal"
-                  << " Epot: " << potential.getPotentialEnergy() << " kcal"
-                  << std::endl;
-        //        std::cout << "Force: " << box.getAtoms()[0]->getForce().x << "
-        //        "
-        //                  << box.getAtoms()[0]->getForce().y << " "
-        //                  << box.getAtoms()[0]->getForce().z << std::endl;
-        //        std::cout << "Velocity: " <<
-        //        box.getAtoms()[0]->getVelocity().x << " "
-        //                  << box.getAtoms()[0]->getVelocity().y << " "
-        //                  << box.getAtoms()[0]->getVelocity().z << std::endl;
         if (i % 2 == 0)
         {
             output.writeAllOutput(box);
+            std::cout << "Step: " << i << " T: " << thermostat.getTemperature()
+                      << " Ekin: " << kinetics.getKineticEnergy() << " kcal/mol"
+                      << " Epot: " << potential.getPotentialEnergy()
+                      << " kcal/mol" << std::endl;
         }
-        integrator.firstStep(box);
-        integrator.secondStep(box);
-        thermostat.calculateTemperature(box);
-        thermostat.applyBussiThermostat(box);
     }
 
     std::cout << "SUCCESS" << std::endl;

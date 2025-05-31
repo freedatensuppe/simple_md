@@ -28,11 +28,11 @@ class Atom
     void updatePosition(Vector3D& shift);
     void scaleVelocity(double& tFactor);
 
-    std::string getName();
-    double      getMass();
-    Vector3D&   getPosition();
-    Vector3D&   getVelocity();
-    Vector3D&   getForce();
+    std::string getName() const;
+    double      getMass() const;
+    Vector3D    getPosition() const;
+    Vector3D    getVelocity() const;
+    Vector3D    getForce() const;
 };
 
 #endif

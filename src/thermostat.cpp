@@ -31,7 +31,7 @@ void Thermostat::applyBerendsenThermostat(Box& box)
     auto dt        = 2.0;
     auto tempRatio = _targetTemperature / _temperature;
 
-    auto tFactor = ::sqrt(1.0 + dt / _tau * (tempRatio - 1.0));
+    auto tFactor = std::sqrt(1.0 + dt / _tau * (tempRatio - 1.0));
     std::cout << tFactor;
     for (const auto& atom : box.getAtoms()) atom->scaleVelocity(tFactor);
 }

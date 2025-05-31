@@ -10,11 +10,6 @@ class Vector3D
     Vector3D(double x_, double y_, double z_);
     Vector3D operator-() const;
 
-    Vector3D operator+(const Vector3D& rhs);
-    Vector3D operator-(const Vector3D& rhs);
-    Vector3D operator*(const Vector3D& rhs);
-    Vector3D operator/(const Vector3D& rhs);
-
     Vector3D& operator+=(const Vector3D& rhs);
     Vector3D& operator+=(const double& rhs);
     Vector3D& operator-=(const Vector3D& rhs);
@@ -24,14 +19,19 @@ class Vector3D
     Vector3D& operator/=(const Vector3D& rhs);
     Vector3D& operator/=(const double& rhs);
 
-    Vector3D round();
+    Vector3D round() const;
 
-    double magnitude();
+    double magnitude() const;
 
-    double min();
+    double min() const;
 
-    void print();
+    void print() const;
 };
+
+Vector3D operator+(const Vector3D& lhs, const Vector3D& rhs);
+Vector3D operator-(const Vector3D& lhs, const Vector3D& rhs);
+Vector3D operator*(const Vector3D& lhs, const Vector3D& rhs);
+Vector3D operator/(const Vector3D& lhs, const Vector3D& rhs);
 
 Vector3D operator+(const Vector3D& lhs, const double& rhs);
 Vector3D operator+(const double& rhs, const Vector3D& lhs);
