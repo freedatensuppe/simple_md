@@ -44,6 +44,9 @@ void Setup::setupPotential(Potential& potential, toml::table config)
     potential.setEpsilon(epsilon);
     potential.setc6(epsilon, sigma);
     potential.setc12(epsilon, sigma);
+
+    potential.setVCut();
+    potential.setFCut();
 }
 
 void Setup::setupIntegrator(Integrator& integrator, toml::table config)
@@ -54,6 +57,6 @@ void Setup::setupIntegrator(Integrator& integrator, toml::table config)
 
 void Setup::setupThermostat(Thermostat& thermostat, toml::table config)
 {
-    double temperature = config["MDSettings"]["temperature"].value_or(0.5);
+    double temperature = config["MDSettings"]["temperature"].value_or(298.15);
     thermostat.setTargetTemperature(temperature);
 }

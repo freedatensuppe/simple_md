@@ -11,6 +11,9 @@ class Potential
     double _c6;
     double _c12;
 
+    double _VCut;
+    double _FCut;
+
     double _LJCutoff;
     double _LJEnergyCutoff;
     double _LJForceCutoff;
@@ -28,8 +31,13 @@ class Potential
 
     void setEpsilon(double epsilon);
     void setSigma(double sigma);
+
     void setc6(double epsilon, double sigma);
     void setc12(double epsilon, double sigma);
+
+    void setVCut();
+    void setFCut();
+
     void setLJCutoff(double sigma);
 
     double getEpsilon();

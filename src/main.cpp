@@ -66,7 +66,7 @@ int main(int argc, char* argv[])
         integrator.secondStep(box);
 
         thermostat.calculateTemperature(box);
-        thermostat.applyBussiThermostat(box);
+        thermostat.applyBerendsenThermostat(box);
 
         kinetics.calculateKineticEnergy(box);
         box.setEnergy(
@@ -78,7 +78,9 @@ int main(int argc, char* argv[])
             std::cout << "Step: " << i << " T: " << thermostat.getTemperature()
                       << " Ekin: " << kinetics.getKineticEnergy() << " kcal/mol"
                       << " Epot: " << potential.getPotentialEnergy()
-                      << " kcal/mol" << std::endl;
+                      << " kcal/mol"
+                      << " Etot: " << box.getEnergy() << " kcal/mol"
+                      << std::endl;
         }
     }
 

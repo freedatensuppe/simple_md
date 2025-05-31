@@ -2,3 +2,4 @@ build
 .cache
 example/output_energy.dat
 example/output_trajectory.xyz
+presentation

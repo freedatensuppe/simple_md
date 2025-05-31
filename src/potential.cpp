@@ -16,26 +16,15 @@ void Potential::calculateEnergyForcesLJCellList(
 )
 {
     _potentialEnergy    = 0.0;
-    double total_energy = 0.00;
-
     Vector3D dimensions = box.getDimensions();
-    double   LJCutoff   = getLJCutoff();
-    double   LJCutoff_6 =
-        LJCutoff * LJCutoff * LJCutoff * LJCutoff * LJCutoff * LJCutoff;
-    double LJCutoff_12 = LJCutoff_6 * LJCutoff_6;
-
-    double F = 0.0;
-
-    double r    = 0.00;
-    double r_sq = 0.00;
-    double r_6  = 0.00;
-    double r_12 = 0.00;
-
     Vector3D rVector(0.0, 0.0, 0.0);
-
-    double V_Cut = _c12 / LJCutoff_12 - _c6 / LJCutoff_6;
-    double F_cut = 12 * _c12 / (LJCutoff_12 * LJCutoff) -
-                   6 * _c6 / (LJCutoff_6 * LJCutoff);
+    Vector3D F_Vector(0.0, 0.0, 0.0);
+    double   potentialEnergy = 0.00;
+    double   r               = 0.00;
+    double   r_sq            = 0.00;
+    double   r_6             = 0.00;
+    double   r_12            = 0.00;
+    double   F               = 0.00;
 
     for (auto& atomPair : atomPairs)
     {
@@ -46,25 +35,24 @@ void Potential::calculateEnergyForcesLJCellList(
         );
         r_sq = magnitudeSquared(rVector);
 
-        if (r_sq < LJCutoff * LJCutoff)
+        if (r_sq < _LJCutoff * _LJCutoff)
         {
-            r    = sqrt(r_sq);
+            r = sqrt(r_sq);
+
             r_6  = r_sq * r_sq * r_sq;
             r_12 = r_6 * r_6;
 
-            Vector3D F_vector(0.0, 0.0, 0.0);
+            potentialEnergy += _c12 / r_12 - _c6 / r_6 - _VCut;
 
-            total_energy += _c12 / r_12 - _c6 / r_6 - V_Cut;
+            F = 12 * _c12 / (r_12 * r) - 6 * _c6 / (r_6 * r) - _FCut;
 
-            F = 12 * _c12 / (r_12 * r) - 6 * _c6 / (r_6 * r) - F_cut;
+            F_Vector = F * rVector / r;
 
-            F_vector = F * rVector / r;
-
-            box.getAtoms()[atomPair.second]->addForce(F_vector);
-            box.getAtoms()[atomPair.first]->addForce(F_vector *= -1.0);
+            box.getAtoms()[atomPair.second]->addForce(F_Vector);
+            box.getAtoms()[atomPair.first]->addForce(F_Vector *= -1.0);
         }
     }
-    _potentialEnergy = total_energy;   // kcal
+    _potentialEnergy = potentialEnergy;   // kcal
 }
 
 void Potential::resetForces(Box& box)
@@ -85,6 +73,24 @@ void Potential::setc6(double epsilon, double sigma)
 void Potential::setc12(double epsilon, double sigma)
 {
     _c12 = 4 * epsilon * (pow(sigma, 12));
+}
+
+void Potential::setVCut()
+{
+    double LJCutoff_6 =
+        _LJCutoff * _LJCutoff * _LJCutoff * _LJCutoff * _LJCutoff * _LJCutoff;
+    double LJCutoff_12 = LJCutoff_6 * LJCutoff_6;
+
+    _VCut = _c12 / LJCutoff_12 - _c6 / LJCutoff_6;
+}
+void Potential::setFCut()
+{
+    double LJCutoff_6 =
+        _LJCutoff * _LJCutoff * _LJCutoff * _LJCutoff * _LJCutoff * _LJCutoff;
+    double LJCutoff_12 = LJCutoff_6 * LJCutoff_6;
+
+    double _FCut = 12 * _c12 / (LJCutoff_12 * _LJCutoff) -
+                   6 * _c6 / (LJCutoff_6 * _LJCutoff);
 }
 
 void Potential::setLJCutoff(double sigma) { _LJCutoff = 2.5 * sigma; }

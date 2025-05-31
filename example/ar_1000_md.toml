@@ -2,7 +2,7 @@
 
 nsteps      = 25000
 timestep    = 2.0
-temperature = 298.15
+temperature = 87.15
 restart_file = "ar_1000_md.rst"
 
 [FF]
