@@ -5,10 +5,10 @@
 
 #include "box.hpp"
 
-using CellList = std::vector<std::vector<std::vector<std::vector<size_t>>>>;
-using AtomPair = std::pair<size_t, size_t>;
+using CellList = std::vector<std::vector<std::vector<std::vector<int>>>>;
+using AtomPair = std::pair<int, int>;
 
-CellList createLinkedCellList(Box& box);
+CellList createLinkedCellList(Box& box, double cutoff);
 void     printLinkedCellList(CellList& cellList, Box& box);
 
 std::vector<std::tuple<int, int, int>> getNeighboringCells(

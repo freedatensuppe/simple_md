@@ -8,9 +8,8 @@
 
 #include "box.hpp"
 
-CellList createLinkedCellList(Box& box)
+CellList createLinkedCellList(Box& box, double cutoff)
 {
-    double cutoff   = 8.5;
     int    numCells = std::floor(box.getDimensions().min() / cutoff);
     double cellSize = box.getDimensions().min() / numCells;
 
@@ -20,9 +19,9 @@ CellList createLinkedCellList(Box& box)
 
     CellList cellList(
         nCellsX,
-        std::vector<std::vector<std::vector<size_t>>>(
+        std::vector<std::vector<std::vector<int>>>(
             nCellsY,
-            std::vector<std::vector<size_t>>(nCellsZ)
+            std::vector<std::vector<int>>(nCellsZ)
         )
     );
 

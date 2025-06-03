@@ -55,7 +55,7 @@ int main(int argc, char* argv[])
 
     for (int i = 0; i < nsteps; ++i)
     {
-        CellList              cellList  = createLinkedCellList(box);
+        CellList cellList = createLinkedCellList(box, potential.getLJCutoff());
         std::vector<AtomPair> atomPairs = createNeighborAtomPairs(cellList);
 
         integrator.firstStep(box);
